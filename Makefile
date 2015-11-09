@@ -5,12 +5,16 @@ config_opt = $(shell if [ -e config.h -a -n "`egrep '^\#define[[:space:]]+$(1)([
 INSTALL = install
 KDIR   ?= /lib/modules/$(shell uname -r)/source
 
+ifeq ($(call config_opt,CONFIG_BIONIC),true)
+	include aosp.mk
+endif # CONFIG_BIONIC
+
 ifeq ($(call config_opt,CONFIG_KLIBC),true)
 	export CC = klcc
 endif
 
 CFLAGS ?= -Wall -g -O2
-CFLAGS += -I$(KDIR)/include
+CFLAGS += -I$(KDIR)/include $(HEADER_OPS)
 
 ifeq ($(call config_opt,CONFIG_X86EMU),true)
 	CFLAGS += -Ilibs/x86emu
@@ -37,7 +41,7 @@ endif
 all: $(V86LIB) v86d $(DEBUG_BUILD)
 
 %.o: %.c v86.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(HEADER_OPS) -c -o $@ $<
 
 v86d: $(V86OBJS) $(V86LIB) v86.o
 	$(CC) $(LDFLAGS) $(V86OBJS) v86.o $(LDLIBS) -o $@

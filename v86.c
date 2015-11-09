@@ -4,7 +4,7 @@
 #include <string.h>
 #include <errno.h>
 #include <time.h>
-#include <fcntl.h>
+#include <linux/fcntl.h>
 
 #include <sys/socket.h>
 #include <sys/poll.h>

@@ -1,3 +1,5 @@
+include ../../aosp.mk
+
 LIBDIR ?= /usr/local/lib
 INCDIR ?= /usr/local/include
 
@@ -14,10 +16,10 @@ VERSION = $(MAJOR).$(MINOR)
 LIBNAME = liblrmi
 
 %.o: %.c
-	$(CC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(HEADER_OPS) -o $@ $<
 
 %.lo: %.c
-	$(CC) -c $(CPPFLAGS) $(CFLAGS) -fPIC -o $@ $<
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(HEADER_OPS) -fPIC -o $@ $<
 
 all: $(all)
 
@@ -26,7 +28,7 @@ liblrmi.a: $(objects)
 
 liblrmi.so: $(pic_objects)
 #	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -shared -o $@ $^
-	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,-soname,$(LIBNAME).so.$(MAJOR) -Wl,--section-start,vm86_ret=0x9000 -fPIC -shared -o $(LIBNAME).so.$(VERSION) $^
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(HEADER_OPS) -Wl,-soname,$(LIBNAME).so.$(MAJOR) -Wl,--section-start,vm86_ret=0x9000 -fPIC -shared -o $(LIBNAME).so.$(VERSION) $^
 	ln -sf $(LIBNAME).so.$(VERSION) $(LIBNAME).so.$(MAJOR)
 	ln -sf $(LIBNAME).so.$(MAJOR) $(LIBNAME).so
 

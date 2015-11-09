@@ -1,4 +1,6 @@
+include ../../aosp.mk
 OBJS = decode.o fpu.o ops.o ops2.o prim_ops.o sys.o
+
 
 ifeq ($(AR),)
 	AR = ar
@@ -8,7 +10,7 @@ libx86emu.a: $(OBJS)
 	$(AR) rv $@ $+
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+	$(CC) -c $(CFLAGS) $(HEADER_OPS) -o $@ $<
 
 CFLAGS += -I. -I../../include -I../../include/x86emu
 
